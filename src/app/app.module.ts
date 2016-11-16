@@ -4,7 +4,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { ApiService } from './shared';
+import { CompVsCompComponent } from './compVsComp/compVsComp.component';
+import { ApiService, HumanComponent, ComputerComponent, ScoreComponent } from './shared';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
@@ -17,7 +18,11 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
   ],
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    HumanComponent,
+    ComputerComponent,
+    ScoreComponent,
+    CompVsCompComponent
   ],
   providers: [
     ApiService

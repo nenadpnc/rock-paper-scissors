@@ -1,11 +1,17 @@
 {
     "rock": {
-        "beats": ["scissors"]
+        "beats": ["scissors", "lizard"]
     },
     "paper": {
-        "beats": ["rock"]
+        "beats": ["rock", "spock"]
     },
     "scissors": {
-        "beats": ["paper"]
+        "beats": ["paper", "lizard"]
+    },
+    "spock": {
+        "beats": ["scissors", "rock"]
+    },
+    "lizard": {
+        "beats": ["paper", "spock"]
     }
 }

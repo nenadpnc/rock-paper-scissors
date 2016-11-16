@@ -2,54 +2,11 @@
 
   <a class="btn" (click)="startGame()">Start Game</a>
 
+  <a class="btn left" (click)="getAltConfig()">Add spock and lizard</a>
+
   <div class="game">
-    <div class="player">
-      <div class="header">
-        human
-      </div>
-      <div class="board">
-        <div class="buttons" *ngIf="gameStarted">
-          <a (click)="selectElement('rock')">rock</a>
-          <a (click)="selectElement('paper')">paper</a>
-          <a (click)="selectElement('scissors')">scissors</a>
-        </div>
-        <div class="choice">
-          <h1>{{currentItem1}}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="score">
-      <div class="result">
-        <div>
-          <p>Wins</p>
-          <div>{{scores.player1}}</div>
-        </div>
-        <div class="tie">
-          <p>Ties</p>
-          <div>{{scores.tie}}</div>  
-        </div>
-        <div>
-          <p>Wins</p>
-          <div>{{scores.player2}}</div>  
-        </div>
-      </div>
-      <div class="rounds">
-        <p>Round {{scores.results.length + 1}}</p>
-        <div class="round" *ngFor="let item of scores.results; let i = index">
-          <div [class.winner]="item.score === 'player1'">{{item.player1}}</div>
-          <div>Round {{i + 1}}</div>
-          <div [class.winner]="item.score === 'player2'">{{item.player2}}</div>
-        </div>
-      </div>
-    </div>
-    <div class="player">
-      <div class="header">
-        computer
-      </div>
-      <div class="board">
-        <div class="choice">
-          <h1>{{currentItem2}}</h1>
-        </div>
-    </div>
+    <human-player [gameStarted]="gameStarted" [items]="items" (selectChoice)="onSelect($event)"></human-player>
+    <score [scores]="scores"></score>
+    <computer-player [items]="items" [current]="computerChoice"></computer-player>
   </div>
 </div>

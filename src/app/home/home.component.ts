@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../shared/api.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ApiService, HumanComponent, ComputerComponent, IScore } from '../shared/index';
+
 
 @Component({
   selector: 'my-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
+  @ViewChild(ComputerComponent) computer: ComputerComponent;
+
+  computerChoice: string;
   conf: Object;
-  currentItem2: string;
-  currentItem1: string;
-  shuffleInterval: any;
+  items: string[];
   gameStarted: boolean = false;
-  scores: { results: any[], player1: number, tie: number, player2: number } = {
+  scores: IScore = {
       results: [], 
       player1: 0, 
       player2: 0, 
@@ -22,57 +23,31 @@ export class HomeComponent implements OnInit {
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.getGameConfiguration().subscribe((data: any) => this.conf = data);
-    this.scores = this.api.getResults() || this.scores;
+    this.api.getGameConfiguration().subscribe((data: any) => {
+      this.conf = data;
+      this.items = Object.keys(data);
+    });
+    this.scores = this.api.getResults('humanVSComp') || this.scores;
   }
 
   startGame() {
     this.gameStarted = true;
-    this.currentItem1 = '';
-    this.shuffle();
+    this.computer.shuffle();
   }
 
-  shuffle() {
-    this.shuffleInterval = setInterval(() => {
-      this.currentItem2 = this.randomPlayer2Result();
-    }, 500);
-  }
-
-  selectElement(item: string) {
-    clearInterval(this.shuffleInterval);
-    this.currentItem1 = item;
-    this.currentItem2 = this.randomPlayer2Result();
-
-    this.evaluateResult(this.currentItem1, this.currentItem2);
-  }
-
-  randomPlayer2Result(): string {
-      let items = Object.keys(this.conf);
-      return items[Math.floor(Math.random() * items.length)];
-  }
-
-  evaluateResult(player1Choice, player2Choice) {
+  onSelect(humanChoice: string) {
     this.gameStarted = false;
-    if (player1Choice === player2Choice) {
-      this.setResults(player1Choice, player2Choice, 'tie');
-    }
-
-    if (this.conf[player1Choice].beats.indexOf(player2Choice) !== -1) {
-      this.setResults(player1Choice, player2Choice, 'player1');
-    } else {
-      this.setResults(player1Choice, player2Choice, 'player2')
-    }
+    this.computerChoice = this.computer.randomComputerResult();
+    this.computer.clearShuffleInterval();
+    this.api.evaluateResult(humanChoice, this.computerChoice, this.scores, this.conf, 'humanVSComp');
   }
 
-  setResults(player1Choice: string, player2Choice: string, winner: string) {
-    let score = {
-      player1: player1Choice,
-      player2: player2Choice,
-      score: winner
-    };
-    this.scores[winner]++;
-    this.scores.results.push(score);
-    this.api.setResult(this.scores);
+  getAltConfig() {
+    this.api.getAltGameConfiguration().subscribe((data: any) => {
+      this.conf = data;
+      this.items = Object.keys(data);
+    })
   }
+
 
 }

@@ -1,0 +1,10 @@
+<div class="wrapper">
+
+  <a class="btn" (click)="startGame()">Start Game</a>
+
+  <div class="game">
+    <computer-player [items]="items" [current]="computerChoice1"></computer-player>
+    <score [scores]="scores"></score>
+    <computer-player [items]="items" [current]="computerChoice2"></computer-player>
+  </div>
+</div>
